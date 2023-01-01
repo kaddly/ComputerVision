@@ -14,7 +14,7 @@ class Diffusion:
         self.img_size = img_size
         self.device = device
 
-        self.beta = self.prepare_noise_schedule()
+        self.beta = self.prepare_noise_schedule().to(device)
         self.alpha = 1. - self.beta
         self.alpha_hat = torch.cumprod(self.alpha, dim=0)
 

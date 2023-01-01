@@ -1,3 +1,4 @@
+import os
 import torch
 from matplotlib import pyplot as plt
 from train import train
@@ -9,11 +10,11 @@ def launch():
     import argparse
     parser = argparse.ArgumentParser()
     args = parser.parse_args()
-    args.run_name = "DDPM_Uncondtional"
+    args.run_name = "DDPM_Unconditional"
     args.epochs = 500
     args.batch_size = 12
     args.image_size = 64
-    args.dataset_path = r"C:\Users\dome\datasets\landscape_img_folder"
+    args.dataset_path = os.path.join(os.path.abspath('.'), 'data', 'landscape_img_folder')
     args.device = "cuda"
     args.lr = 3e-4
     train(args)
