@@ -14,7 +14,7 @@ def launch():
     args.epochs = 500
     args.batch_size = 12
     args.image_size = 64
-    args.dataset_path = os.path.join(os.path.abspath('.'), 'data', 'landscape_img_folder')
+    args.dataset_path = os.path.join(os.path.abspath('.'), 'data', 'Chinese-Landscape-Painting-Dataset')
     args.device = "cuda"
     args.lr = 3e-4
     train(args)
