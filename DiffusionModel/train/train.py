@@ -14,6 +14,9 @@ def train(args):
     device = args.device
     dataloader = get_data(args)
     model = UNet().to(device)
+    if args.is_recent_train:
+        ckpt = torch.load(os.path.join(os.path.abspath('.'), 'models', args.run_name, 'ckpt.pt'))
+        model.load_state_dict(ckpt)
     optimizer = optim.AdamW(model.parameters(), lr=args.lr)
     mse = nn.MSELoss()
     diffusion = Diffusion(img_size=args.image_size, device=device)
