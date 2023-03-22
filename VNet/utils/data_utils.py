@@ -53,16 +53,16 @@ def cat_list(images, fill_value=0):
     return batched_imgs
 
 
-def load_data():
+def load_data(batch_size):
     img_train_path, img_val_path = read_data_paths('Images')
     msk_train_path, msk_val_path = read_data_paths('Masks')
 
     train_transforms = get_transform(train=True)
     train_dataset = Flare21Dataset(img_train_path, msk_train_path, train_transforms)
-    train_loader = DataLoader(train_dataset, batch_size=2, shuffle=True)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
     val_train_path = get_transform(train=False)
     val_dataset = Flare21Dataset(img_val_path, msk_val_path, val_train_path)
-    val_loader = DataLoader(val_dataset, batch_size=2, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
 
     return train_loader, val_loader
