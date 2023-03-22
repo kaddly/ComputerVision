@@ -7,11 +7,11 @@ from utils.transforms import get_transform
 
 def read_data_paths(data_dir='Images'):
     train_path, val_path = [], []
-    for i in os.listdir('../data/' + data_dir):
+    for i in os.listdir(os.path.join('data', data_dir)):
         if i.split('_')[0] == 'testing':
-            val_path.append(os.path.join('../data', data_dir, i))
+            val_path.append(os.path.join('data', data_dir, i))
         else:
-            train_path.append(os.path.join('../data', data_dir, i))
+            train_path.append(os.path.join('data', data_dir, i))
     return train_path, val_path
 
 

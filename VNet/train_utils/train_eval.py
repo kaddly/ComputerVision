@@ -30,12 +30,12 @@ def initialize_weights(net):
 
 
 def accuracy_function(numclass, accuracyname, input, target):
-    if accuracyname is 'dice':
+    if accuracyname == 'dice':
         if numclass == 1:
             return dice_coeff(input, target)
         else:
             return multiclass_dice_coeff(input, target)
-    if accuracyname is 'iou':
+    if accuracyname == 'iou':
         if numclass == 1:
             return iou_coeff(input, target)
         else:
@@ -55,6 +55,7 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
     startTime = time.time()
     best_validation_dsc = 0.0
 
+    model.to(device)
     model.apply(initialize_weights)
     optimizer = optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), epochs)
@@ -62,7 +63,7 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
 
     writer = SummaryWriter(log_dir=model_dir)
 
-    for epoch in epochs:
+    for epoch in range(epochs):
         model.train()
 
         totalTrainLoss = []
