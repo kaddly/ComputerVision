@@ -27,6 +27,18 @@ class Compose(object):
         return image, target
 
 
+class Resize(object):
+    def __init__(self, size):
+        self.size = size
+
+    def __call__(self, image, target):
+        image = F.resize(image, self.size)
+        # 这里的interpolation注意下，在torchvision(0.9.0)以后才有InterpolationMode.NEAREST
+        # 如果是之前的版本需要使用PIL.Image.NEAREST
+        target = F.resize(target, self.size, interpolation=T.InterpolationMode.NEAREST)
+        return image, target
+
+
 class RandomResize(object):
     def __init__(self, min_size, max_size=None):
         self.min_size = min_size
@@ -130,11 +142,9 @@ class SegmentationPresetTrain:
 
 
 class SegmentationPresetEval:
-    def __init__(self, base_size, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
-        min_size = int(0.5 * base_size)
-        max_size = int(1.2 * base_size)
+    def __init__(self, crop_size, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
         self.transforms = Compose([
-            RandomResize(max_size, min_size),
+            Resize(crop_size),
             # ToTensor(),
             # Normalize(mean=mean, std=std),
         ])
@@ -150,4 +160,4 @@ def get_transform(train, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
     if train:
         return SegmentationPresetTrain(base_size, crop_size, mean=mean, std=std)
     else:
-        return SegmentationPresetEval(base_size, mean=mean, std=std)
+        return SegmentationPresetEval(crop_size, mean=mean, std=std)

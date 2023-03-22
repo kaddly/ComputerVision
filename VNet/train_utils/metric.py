@@ -155,6 +155,7 @@ def dice_coeff(input: Tensor, target: Tensor):
 
 
 def iou_coeff(input: Tensor, target: Tensor):
+    assert input.size()==target.size()
     input = (input > 0.5).float()
     smooth = 1e-5
     num = target.size(0)
@@ -198,11 +199,11 @@ def multiclass_dice_coeffv2(input: Tensor, target: Tensor):
     return gen_dice_coef.mean()
 
 
-def multiclass_iou_coeff(input: Tensor, target: Tensor):
-    assert input.size() == target.size()
+def multiclass_iou_coeff(input: Tensor, target: Tensor, Channel):
+    target = F.one_hot(target, Channel).permute(0, 4, 1, 2, 3)
     union = 0
     # remove backgroud region
-    for channel in range(1, input.shape[1]):
+    for channel in range(input.shape[1]):
         union += iou_coeff(input[:, channel, ...], target[:, channel, ...])
     return union / (input.shape[1] - 1)
 

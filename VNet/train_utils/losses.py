@@ -303,7 +303,7 @@ class MutilDiceLoss(nn.Module):
         intersection = torch.sum(y_true * y_pred, dim=(0, 2))
         denominator = torch.sum(y_true + y_pred, dim=(0, 2))
         gen_dice_coef = ((2. * intersection + smooth) / (denominator + smooth)).clamp_min(eps)
-        loss = - gen_dice_coef
+        loss = 1 - gen_dice_coef
         # Dice loss is undefined for non-empty classes
         # So we zero contribution of channel that does not have true pixels
         # NOTE: A better workaround would be to use loss term `mean(y_pred)`

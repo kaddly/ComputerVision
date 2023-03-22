@@ -1,5 +1,6 @@
 import os
 import time
+from tqdm import tqdm
 from pathlib import Path
 import torch
 from torch import nn
@@ -39,10 +40,10 @@ def accuracy_function(numclass, accuracyname, input, target):
         if numclass == 1:
             return iou_coeff(input, target)
         else:
-            return multiclass_iou_coeff(input, target)
+            return multiclass_iou_coeff(input, target, numclass)
 
 
-def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3, showwind=[8, 8]):
+def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3, showwind=[8, 12]):
 
     model_dir = './models'
     accuracyname = 'iou'
@@ -57,9 +58,11 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
 
     model.to(device)
     model.apply(initialize_weights)
-    optimizer = optim.AdamW(model.parameters(), lr=lr)
+    optimizer = optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), epochs)
-    lossFunc = MutilDiceLoss(torch.as_tensor([1.] * numclass).contiguous().to(device))
+    # each class weight shape[0] is background
+    alpha = torch.as_tensor([0.8, 1.2, 1.2, 1.2, 1.2]).contiguous().to(device)
+    lossFunc = MutilDiceLoss(alpha)
 
     writer = SummaryWriter(log_dir=model_dir)
 
@@ -72,7 +75,7 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
         totalValidationAccu = []
         trainshow = True
 
-        for batch in train_loader:
+        for batch in tqdm(train_loader):
             img, msk = [data.to(device) for data in batch]
 
             pred_logit, pred = model(img)
