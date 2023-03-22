@@ -4,7 +4,7 @@ from train_utils import train_val
 from utils import load_data
 
 if __name__ == '__main__':
-    lr = 0.01
+    lr = 1e-3
     batch_size = 2
     epochs = 500
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
