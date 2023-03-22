@@ -52,6 +52,9 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
     MODEL_PATH = os.path.join(model_dir, "MutilUNet3d.pth")
     print("[INFO] training the network...")
     H = {"train_loss": [], "train_accuracy": [], "valdation_loss": [], "valdation_accuracy": []}
+    startTime = time.time()
+    best_validation_dsc = 0.0
+
     model.apply(initialize_weights)
     optimizer = optim.AdamW(model.parameters(), lr=lr)
     lr_scheduler = create_lr_scheduler(optimizer, len(train_loader), epochs)
@@ -114,9 +117,6 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
         H["train_accuracy"].append(avgTrainAccu.cpu().detach().numpy())
         H["valdation_accuracy"].append(avgValidationAccu.cpu().detach().numpy())
 
-        startTime = time.time()
-        best_validation_dsc = 0.0
-
         print("[INFO] EPOCH: {}/{}".format(epoch + 1, epochs))
         print("Train loss: {:.5f}, Train accu: {:.5f}，validation loss: {:.5f}, validation accu: {:.5f}".format(
             avgTrainLoss, avgTrainAccu, avgValidationLoss, avgValidationAccu))
@@ -128,8 +128,6 @@ def train_val(model, numclass, train_loader, val_loader, epochs, device, lr=1e-3
 
         if avgValidationAccu > best_validation_dsc:
             best_validation_dsc = avgValidationAccu
-            # best_model_params = self.model.state_dict()
-            # serialize best model to disk
             torch.save(model.state_dict(), MODEL_PATH)
         endTime = time.time()
         print("[INFO] total time taken to train the model: {:.2f}s".format(endTime - startTime))
