@@ -153,7 +153,7 @@ class SegmentationPresetEval:
         return self.transforms(img, target)
 
 
-def get_transform(train, mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)):
+def get_transform(train, mean=(0.485, 0.456, 0.456, 0.406), std=(0.229, 0.224, 0.224, 0.225)):
     base_size = 135
     crop_size = 96
 
