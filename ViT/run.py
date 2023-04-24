@@ -10,13 +10,14 @@ def set_param():
     parser.add_argument('--run_name', type=str, default='ViT')
     parser.add_argument('--data_path', type=str, default=os.path.join('data', 'flower_photos'))
     parser.add_argument('--val_rate', type=float, default=0.2)
+    parser.add_argument('--num_classes', type=int, default=5)
     parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--batch_size', type=int, default=8)
     parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--lrf', type=float, default=0.01)
 
     # 预训练权重路径，如果不想载入就设置为空字符
-    parser.add_argument('--weights', type=str, default='./vit_base_patch16_224_in21k.pth',
+    parser.add_argument('--weights', type=str, default=os.path.join('models', 'vit_base_patch16_224_in21k.pth'),
                         help='initial weights path')
     # 是否冻结权重
     parser.add_argument('--freeze_layers', type=bool, default=True)

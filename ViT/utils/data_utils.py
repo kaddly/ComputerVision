@@ -108,7 +108,8 @@ class MyDataSet(Dataset):
 
 
 def load_flower_data(args):
-    train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(args.root, args.val_rate,
+    train_images_path, train_images_label, val_images_path, val_images_label = read_split_data(args.data_path,
+                                                                                               args.val_rate,
                                                                                                plot_image=True)
     train_dataset = MyDataSet(train_images_path, train_images_label, transform=get_transform(is_train=True))
     val_dataset = MyDataSet(val_images_path, val_images_label, transform=get_transform(is_train=False))
