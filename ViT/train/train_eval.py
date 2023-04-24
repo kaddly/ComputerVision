@@ -1,7 +1,6 @@
 import os
 import sys
 import math
-import time
 import datetime
 from tqdm import tqdm
 import torch
@@ -73,7 +72,7 @@ def evaluate(model, data_loader, device, epoch):
 
 
 def train_eval(model, train_loader, val_loader, args):
-    results_file = os.path.join("results", args.dataset,
+    results_file = os.path.join("results", args.run_name,
                                 "results{}.txt".format(datetime.datetime.now().strftime("%Y%m%d-%H%M%S")))
     tb_writer = SummaryWriter()
     device = torch.device(args.device if torch.cuda.is_available() else "cpu")
@@ -121,8 +120,8 @@ def train_eval(model, train_loader, val_loader, args):
 
         with open(results_file, "a") as f:
             train_info = f"[epoch: {epoch}]\n" \
-                         f"train_loss: {train_loss:>5.4f},  lr: {lr:>5.4f}\n"
-            val_info = f"val_loss: {val_loss:>5.4f}"
+                         f"train_loss: {train_loss:>5.4f}  train_acc: {train_acc:>5.3f} lr: {lr:>5.4f}\n"
+            val_info = f"val_loss: {val_loss:>5.4f}  val_acc: {val_acc:>5.3f}"
             f.write(train_info + val_info + "\n\n")
 
         tags = ["train_loss", "train_acc", "val_loss", "val_acc", "learning_rate"]
@@ -132,4 +131,4 @@ def train_eval(model, train_loader, val_loader, args):
         tb_writer.add_scalar(tags[3], val_acc, epoch)
         tb_writer.add_scalar(tags[4], lr, epoch)
 
-        torch.save(model.state_dict(), "./models/model-{}.pth".format(epoch))
+        torch.save(model.state_dict(), os.path.join("models", args.run_name,"model-{}.pth".format(epoch)))
