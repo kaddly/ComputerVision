@@ -131,4 +131,4 @@ def train_eval(model, train_loader, val_loader, args):
         tb_writer.add_scalar(tags[3], val_acc, epoch)
         tb_writer.add_scalar(tags[4], lr, epoch)
 
-        torch.save(model.state_dict(), os.path.join("models", args.run_name,"model-{}.pth".format(epoch)))
+        torch.save(model.state_dict(), os.path.join("models", args.run_name, "model-{}.pth".format(epoch)))
